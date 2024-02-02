@@ -17,7 +17,7 @@ public class PoohServer {
         pool.execute(topicSchema);
     }
 
-    private void runServer() {
+    private void runServer() throws IOException {
         ExecutorService pool = Executors.newCachedThreadPool();
         try (ServerSocket server = new ServerSocket(9000)) {
             System.out.println("Pooh is ready ...");
@@ -37,13 +37,10 @@ public class PoohServer {
                             if (action.equals("intro")) {
                                 if (name.equals("queue")) {
                                     queueSchema.addReceiver(
-                                            new SocketReceiver(text, new PrintWriter(out))
-                                    );
-                                }
-                                if (name.equals("topic")) {
+                                            new SocketReceiver(text, new PrintWriter(out)));
+                                } else if (name.equals("topic")) {
                                     topicSchema.addReceiver(
-                                            new SocketReceiver(text, new PrintWriter(out))
-                                    );
+                                            new SocketReceiver(text, new PrintWriter(out)));
                                 }
                             }
                             if (action.equals("queue")) {
@@ -58,8 +55,6 @@ public class PoohServer {
                     }
                 });
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
